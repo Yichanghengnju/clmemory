@@ -1,12 +1,13 @@
 {
   "system": "clmemory",
-  "release": "v1.0",
+  "release": "v1.0.1",
   "profiles": [
     "v1.0-textual",
     "v1.0-coding"
   ],
   "filter_revision": "final-relevance-safety-v3",
   "files_sha256": {
+    ".gitattributes": "40e6235886c8412df544f5c7f12305abe40941b7d7b18f4c0635836774378da4",
     ".gitignore": "d9cd11ad82b0d66a22f7bf6a01ebaa76cd28495a4dc3b599a556b7d38ee501bf",
     "docs/provenance.md": "7f0f69282918a4cd732cf7205d0d99a176bab79003634e5e823e0717047650fb",
     "docs/validation.md": "e9305ec6f1edddd482d30dd1b8592e103af5ba478730903d71658b0904de8b5e",
