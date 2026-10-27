@@ -1,8 +1,8 @@
 {
   "system": "clmemory",
-  "release": "v1.0.3",
+  "release": "v1.0.4",
   "profiles": [
-    "v1.0.3-textual"
+    "v1.0.4-textual"
   ],
   "filter_revision": "final-relevance-safety-v3",
   "files_sha256": {
@@ -10,16 +10,17 @@
     ".gitignore": "d9cd11ad82b0d66a22f7bf6a01ebaa76cd28495a4dc3b599a556b7d38ee501bf",
     "LICENSE": "72b534383e713bd0d578bfc0d1ec35dd2c1c9a81c6fa4e651d494c9b59859d01",
     "NOTICE": "d3dacb4104ac51dd0cd5333f1401d04a0bce7561930151fbb695362414bf163f",
-    "README.md": "2344dd9b4a2e2b2684cb0e53d6cb373642df12f239634590c5237feb041147e6",
+    "README.md": "d04d27dc1dce8872d433f68ed0249b436496881f2ab9dba4cece950178911fff",
     "THIRD_PARTY_NOTICES.md": "26648c44ab424219ad9a98d53f3503e3b0f14ac7c2ac829190548cddc94b5172",
     "docs/provenance.md": "7f0f69282918a4cd732cf7205d0d99a176bab79003634e5e823e0717047650fb",
     "docs/release-v1.0.2.md": "3cadf5b3bb496f2cefb1a5661c11fc176878cb980db87d0d9636cbc7f281fa2d",
     "docs/release-v1.0.3.md": "49630a4ad1c1564231e4b89557141fc069eec4df1073efc43ff573cd461ee586",
+    "docs/release-v1.0.4.md": "2a5148e27f6f441d2ca5804d4728be90625bda01230581b7638624c10a731f5c",
     "docs/validation.md": "e9305ec6f1edddd482d30dd1b8592e103af5ba478730903d71658b0904de8b5e",
     "embedding.example.json": "3a547080be440280589ee342d281feaf74645a5204de6df18ac67a8e08518312",
     "filter.example.json": "f8698b8c5a5a962be74fd0c9e585f7041f538246cc93d179384c2f6935fe1087",
     "licenses/MemMachine-Apache-2.0.txt": "72b534383e713bd0d578bfc0d1ec35dd2c1c9a81c6fa4e651d494c9b59859d01",
-    "pyproject.toml": "4ff1180ea93abfe6171b3a88ef81330939099d371126d7c05e9be5ba44550459",
+    "pyproject.toml": "f7ad922cea15e5abf92dd16cc19f7ef800209f0e2e0b4cfb9cb7e7f3913eb9e6",
     "requirements-native.txt": "be6d2f3ee888ef66c8bc6d5c5babdfe3defb336baaa19d3e848cd958b7a872f0",
     "source-export.json": "69c95c5009a5bb20df956aed4fb510fdd0a8f9d1c3378edb21f17c0eeaff5275",
     "src/agent_memory/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -29,19 +30,20 @@
     "src/agent_memory/delivery.py": "e91019eee67d0806c844247a3bb79345c67c490a0fc1a761d416f4dcddbc8d67",
     "src/agent_memory/domain.py": "2c53c679f99da86e89158add1e9ee6dc2c66bab3683d1935e12c9ab239d749b4",
     "src/agent_memory/evidence_tracing.py": "67649a69d8d248829235a698650e9ef007532892ad2fa74fd9a427231c2809e3",
-    "src/agent_memory/final_filter.py": "3e7b963511d793703d9cd8f1c44a2b665c0e74f80a3ae82d73e97c8867cca12f",
+    "src/agent_memory/final_filter.py": "341fd3d9120942060287a92ef40830fb32384b0d8ff48f077e6f1d4ebaa468ce",
     "src/agent_memory/lexical.py": "3695d4b8dffe451f75bf6fdaf8915fee0077b6997ef209d623cf94b340561a37",
     "src/agent_memory/memory.py": "c4407c07b302698b09580761e330217d7b4e1c14552753367dfdc7b58c569963",
     "src/agent_memory/method_memmachine.py": "e2ec1e355819a161fbbb9f9ca972558a07058d36cb96155e75391c7ea214d207",
     "src/agent_memory/method_store.py": "42eb75d3610eaa65e76bca4e39420a6a5c45d986b8751e90a43763b5350d5ef5",
     "src/agent_memory/storage.py": "715c0ee49bbd097338672d4f89b892356e1395e1c28991c106f2bf3bceb83111",
-    "src/agent_memory/submission.py": "89306a7e3ad487fb97bd1fb0bb8e63add34f02c052a8b119d02cf1d8599ff356",
+    "src/agent_memory/submission.py": "c8fddc953d0716d015bfc51a8d32e0393e2b45a1b1ef0b105c31f326bcf34ebd",
     "src/agent_memory/tasks.py": "530210e41e701faa51fef51b4973873dc5e4db190ecbd8fc07321a9eafd822da",
     "tests/test_alias_contract.py": "9163e36b6fb8f957cca5c60ee19f0e28f5e252d911a5fb845ab8f68313e6b9e9",
     "tests/test_filter_complete_contract.py": "edefc6cb5c1f87c841ab1f4eff6ab51a5dea72e07c059a3f802fc1d12d02b881",
     "tests/test_filter_concurrent_slot.py": "82c6e65b38abe53be407bd2e932a752d93f068ae298ac112a54664b666b3bfc6",
+    "tests/test_filter_paired_schema.py": "d91a321f6b8868ee3fd969dff12101c573e6ad99387ed3ae779cac9252f7d905",
     "tests/test_final_filter.py": "c11f42e9b4c35ec5e6723589d236d75595f95fc83eadf377076b14fbbba6b757",
     "tests/test_submission.py": "0a48694f8322cff36d20bcb9138f3bf2de9a24e73c7319c36a285d0964210384"
   },
-  "filter_output_contract": "required-per-short-id-decisions-v4"
+  "filter_output_contract": "required-per-short-id-paired-decisions-v5"
 }

@@ -75,7 +75,13 @@ def response_schema(ids):
     row=schema['properties']['items']['items']
     row['required']=['decision','reason']
     del row['properties']['id']
-    schema['$defs']={'evidence_decision':row}
+    keep=json.loads(_json(row));drop=json.loads(_json(row))
+    keep['properties']['decision']['enum']=['keep']
+    keep['properties']['reason']['enum']=['relevant','context_needed','uncertain_keep']
+    drop['properties']['decision']['enum']=['drop']
+    drop['properties']['reason']['enum']=[reason for reason in REASONS
+        if reason not in {'relevant','context_needed','uncertain_keep'}]
+    schema['$defs']={'evidence_decision':{'anyOf':[keep,drop]}}
     schema['properties']['items']={'type':'object','additionalProperties':False,
         'required':list(ids),'properties':{sid:{'$ref':'#/$defs/evidence_decision'} for sid in ids}}
     return schema
@@ -168,7 +174,7 @@ class FinalEvidenceFilter:
                          'endpoint':profile['endpoint'],'system_sha256':hashlib.sha256(SYSTEM.encode()).hexdigest(),
                          'implementation_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                          'schema':SCHEMA,'max_input_bytes':90000,'max_output_tokens':8192,
-                         'output_contract':'required-per-short-id-decisions-v4',
+                         'output_contract':'required-per-short-id-paired-decisions-v5',
                          'selection_only':True,'failure_policy':'service_error_no_unfiltered_fallback'}
 
     def _send(self, payload):
