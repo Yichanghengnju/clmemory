@@ -19,6 +19,7 @@ REQUEST=SearchRequest(user_id='synthetic-user',query='Which notebook did Dana ch
 HITS=[Evidence(id=f'source-{i}',source_ids=(f'source-{i}',),content=f'Synthetic source {i}') for i in range(28)]
 ROWS=[{'id':hit.id,'decision':'keep' if i%5==0 else 'drop',
        'reason':'relevant' if i%5==0 else 'irrelevant'} for i,hit in enumerate(HITS)]
+WIRE_ROWS=[{**row,'id':f'e{i:03d}'} for i,row in enumerate(ROWS)]
 
 def test_28_complete_decisions_keep_original_sources_and_reuse_result(tmp_path):
     calls=[]
@@ -26,9 +27,9 @@ def test_28_complete_decisions_keep_original_sources_and_reuse_result(tmp_path):
         calls.append(payload)
         schema=payload['response_format']['json_schema']['schema']['properties']['items']
         assert schema['type']=='object' and schema['additionalProperties'] is False
-        assert schema['required']==[h.id for h in HITS]
-        assert set(schema['properties'])=={h.id for h in HITS}
-        return envelope(ROWS)
+        assert schema['required']==[f'e{i:03d}' for i in range(len(HITS))]
+        assert set(schema['properties'])=={f'e{i:03d}' for i in range(len(HITS))}
+        return envelope(WIRE_ROWS)
     f=build(tmp_path,send)
     expected=[h for i,h in enumerate(HITS) if i%5==0]
     assert f.apply(REQUEST,HITS)==expected
@@ -38,7 +39,7 @@ def test_28_complete_decisions_keep_original_sources_and_reuse_result(tmp_path):
 
 @pytest.mark.parametrize('failure',['missing_rows','refusal','unknown_id'])
 def test_invalid_results_remain_held_with_private_diagnostics(tmp_path,failure):
-    rows=[dict(row) for row in ROWS]
+    rows=[dict(row) for row in WIRE_ROWS]
     if failure=='missing_rows': rows=[row for row in rows if row['decision']=='keep']
     if failure=='unknown_id': rows[0]['id']='invented'
     calls=[]

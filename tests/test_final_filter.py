@@ -35,9 +35,9 @@ def test_selection_order_body_audit_and_exact_cache(tmp_path):
     def transport(payload):
         calls.append(payload)
         assert payload['response_format']['json_schema']['strict'] is True
-        return response([{'id':'a','decision':'keep','reason':'relevant'},
-                         {'id':'b','decision':'drop','reason':'wrong_entity'},
-                         {'id':'c','decision':'keep','reason':'context_needed'}])
+        return response([{'id':'e000','decision':'keep','reason':'relevant'},
+                         {'id':'e001','decision':'drop','reason':'wrong_entity'},
+                         {'id':'e002','decision':'keep','reason':'context_needed'}])
     f=make_filter(tmp_path,transport,max_calls=1)
     hits=[hit('a','Alice lives in Paris.'),hit('b','Bob lives in Rome.'),hit('c','Alice previously lived in Lyon.')]
     assert f.apply(REQUEST,hits)==[hits[0],hits[2]]
@@ -54,7 +54,7 @@ def test_credentials_never_sent_to_model_and_personal_facts_can_remain(tmp_path)
     def transport(payload):
         calls.append(payload)
         assert 'sk-' not in json.dumps(payload)
-        return response([{'id':'a','decision':'keep','reason':'relevant'}])
+        return response([{'id':'e000','decision':'keep','reason':'relevant'}])
     f=make_filter(tmp_path,transport)
     secret='sk-'+'s'*32
     hits=[hit('a','Alice has a migraine and lives in Paris.'),hit('secret','api_key='+secret)]
@@ -66,7 +66,7 @@ def test_credentials_never_sent_to_model_and_personal_facts_can_remain(tmp_path)
 
 
 def test_privacy_denial_and_unknown_id_are_distinct_from_errors(tmp_path):
-    f=make_filter(tmp_path,lambda _:response([{'id':'a','decision':'drop','reason':'privacy_exfiltration'}],'deny_privacy'))
+    f=make_filter(tmp_path,lambda _:response([{'id':'e000','decision':'drop','reason':'privacy_exfiltration'}],'deny_privacy'))
     assert f.apply(REQUEST,[hit('a','private history')])==[]
     f.close()
     other=tmp_path/'other';other.mkdir()

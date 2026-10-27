@@ -31,7 +31,7 @@ def build_app(*, db_path, api_key, embedder, track, manifest_dir=None, final_fil
         finally:
             memory.close()
     app.router.lifespan_context = lifespan
-    manifest = {"system": "clmemory", "version": "v1.0.2-" + track, "track": track,
+    manifest = {"system": "clmemory", "version": "v1.0.3-" + track, "track": track,
                 "source_files_sha256": code_manifest(), "method": memory.identity,
                 "llm_calls_in_add": 0,
                 "llm_calls_in_search": "one cached final-filter batch if nonempty" if final_filter else 0,
@@ -57,7 +57,11 @@ def main():
                         help='Private GPT-4o-mini relevance + safety/privacy final-filter profile')
     parser.add_argument('--host', default='127.0.0.1')
     parser.add_argument('--port', type=int, default=8000)
+    parser.add_argument('--http-concurrency', type=int, default=16,
+                        help='HTTP admission limit; does not increase shared model concurrency')
     args = parser.parse_args()
+    if args.http_concurrency<1:
+        parser.error('HTTP concurrency must be positive')
     profile = load_profile(args.embedding_profile)
     if profile['dimensions'] != 1024:
         parser.error('This release is frozen to text-embedding-v4 / 1024 dimensions')
@@ -67,7 +71,7 @@ def main():
     app = build_app(db_path=args.db, api_key=Path(args.api_key_file).read_text().strip(),
                     embedder=embedder, track=args.track, manifest_dir=args.manifest_dir, final_filter=final_filter)
     import uvicorn
-    uvicorn.run(app, host=args.host, port=args.port, workers=1, limit_concurrency=16,
+    uvicorn.run(app, host=args.host, port=args.port, workers=1, limit_concurrency=args.http_concurrency,
                 timeout_keep_alive=5, log_level='info')
 
 
