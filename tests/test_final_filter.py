@@ -26,7 +26,7 @@ REQUEST=SearchRequest(user_id='alice',query='Where does Alice live now?',top_k=1
 
 def response(items, query_decision='allow'):
     return 200,json.dumps({'model':'gpt-4o-mini-2024-07-18','choices':[{
-        'finish_reason':'stop','message':{'content':json.dumps({'query_decision':query_decision,'items':items})}}],
+        'finish_reason':'stop','message':{'content':json.dumps({'query_decision':query_decision,'items':{row['id']:{k:v for k,v in row.items() if k!='id'} for row in items}})}}],
         'usage':{'prompt_tokens':50,'completion_tokens':30,'total_tokens':80}}).encode()
 
 

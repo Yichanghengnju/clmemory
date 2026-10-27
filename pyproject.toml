@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "clmemory"
-version = "1.0.0"
+version = "1.0.2"
 description = "Attributed MemMachine event-memory adaptation for AML Textual and Coding"
 requires-python = ">=3.12"
 license = {text = "Apache-2.0"}

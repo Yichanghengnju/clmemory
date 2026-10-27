@@ -1,4 +1,4 @@
-# clmemory v1.0
+# clmemory v1.0.2
 
 **A source-preserving, event-only MemMachine adaptation for the Agent Memory
 Leaderboard Textual and Coding tracks.** It directly uses MemMachine's native
@@ -11,6 +11,10 @@ generative LLM calls. Search applies a final `gpt-4o-mini` selection pass for
 relevance, entity/time/state and safety/privacy after every retrieval channel.
 Embeddings are `text-embedding-v4`, 1024 dimensions.
 No official score is claimed.
+
+This release repairs the final-filter response protocol for the Textual service;
+see [v1.0.2 changes and validation](docs/release-v1.0.2.md). The separately frozen
+Coding repository and its v1.0 deployment are not upgraded by this release.
 
 ## Install
 
