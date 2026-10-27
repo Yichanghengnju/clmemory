@@ -6,6 +6,9 @@ This repository includes two independently frozen Textual profiles:
 - `invmem-v4-baseline8-v1.0`: independent InvMem algorithm adaptation, original
   top8 recipe, text-embedding-v4 / 1024 dimensions, no generative LLM or final filter.
   See [InvMem configuration, provenance and validation](docs/release-invmem-v4-v1.0.md).
+- `v1.0.5-nofilter-textual`: the original clmemory v1.0.5 delivery with the entire
+  final filter explicitly removed. It retains top100 and v4/1024 embeddings.
+  See [the ablation contract and checks](docs/release-v1.0.5-nofilter.md).
 
 The InvMem profile is a separate evaluation version, database and embedding cache.
 The previously published v1.0.5 tag and its deployment sources remain frozen.
