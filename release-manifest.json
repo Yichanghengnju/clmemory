@@ -1,18 +1,19 @@
 {
   "system": "clmemory",
-  "release": "v1.0.5",
+  "release": "invmem-v4-v1.0",
   "profiles": [
-    "v1.0.5-textual"
+    "invmem-v4-baseline8-v1.0"
   ],
-  "filter_revision": "final-relevance-safety-v3",
+  "filter_revision": null,
   "files_sha256": {
     ".gitattributes": "40e6235886c8412df544f5c7f12305abe40941b7d7b18f4c0635836774378da4",
     ".gitignore": "d9cd11ad82b0d66a22f7bf6a01ebaa76cd28495a4dc3b599a556b7d38ee501bf",
     "LICENSE": "72b534383e713bd0d578bfc0d1ec35dd2c1c9a81c6fa4e651d494c9b59859d01",
     "NOTICE": "d3dacb4104ac51dd0cd5333f1401d04a0bce7561930151fbb695362414bf163f",
-    "README.md": "a8c084f4d06962a456f960e67d5e59f95adf9f6acef157c9fe8e8faf46903dd4",
+    "README.md": "4654d3c9fbca72420f108f0729ab7bda5da518a21e8c6f8c464139687c435c64",
     "THIRD_PARTY_NOTICES.md": "26648c44ab424219ad9a98d53f3503e3b0f14ac7c2ac829190548cddc94b5172",
     "docs/provenance.md": "7f0f69282918a4cd732cf7205d0d99a176bab79003634e5e823e0717047650fb",
+    "docs/release-invmem-v4-v1.0.md": "01bf59ca01e2378780610e7fd5dd409d97eb11b3165c7226cf02a955fe785480",
     "docs/release-v1.0.2.md": "3cadf5b3bb496f2cefb1a5661c11fc176878cb980db87d0d9636cbc7f281fa2d",
     "docs/release-v1.0.3.md": "49630a4ad1c1564231e4b89557141fc069eec4df1073efc43ff573cd461ee586",
     "docs/release-v1.0.4.md": "2a5148e27f6f441d2ca5804d4728be90625bda01230581b7638624c10a731f5c",
@@ -20,8 +21,9 @@
     "docs/validation.md": "e9305ec6f1edddd482d30dd1b8592e103af5ba478730903d71658b0904de8b5e",
     "embedding.example.json": "3a547080be440280589ee342d281feaf74645a5204de6df18ac67a8e08518312",
     "filter.example.json": "f8698b8c5a5a962be74fd0c9e585f7041f538246cc93d179384c2f6935fe1087",
+    "invmem-export-provenance.json": "29767d2ede45ffcafd4b7b09d9e6d7defbe8d098e167583092bcd7a5dc8d69e8",
     "licenses/MemMachine-Apache-2.0.txt": "72b534383e713bd0d578bfc0d1ec35dd2c1c9a81c6fa4e651d494c9b59859d01",
-    "pyproject.toml": "8f85e5c631fd8b03f9462cef4753d8408b32aec7ff174f3644632101e5764741",
+    "pyproject.toml": "766c8f779fb87dc35218f5b96c3f849439d7458a054ab938e9f040988add737f",
     "requirements-native.txt": "be6d2f3ee888ef66c8bc6d5c5babdfe3defb336baaa19d3e848cd958b7a872f0",
     "source-export.json": "69c95c5009a5bb20df956aed4fb510fdd0a8f9d1c3378edb21f17c0eeaff5275",
     "src/agent_memory/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -32,8 +34,10 @@
     "src/agent_memory/domain.py": "2c53c679f99da86e89158add1e9ee6dc2c66bab3683d1935e12c9ab239d749b4",
     "src/agent_memory/evidence_tracing.py": "67649a69d8d248829235a698650e9ef007532892ad2fa74fd9a427231c2809e3",
     "src/agent_memory/final_filter.py": "91f1fb6d0b86dcc77a056cc6eb5ecc443d569486c3da95e68d5bf9a3503df71a",
+    "src/agent_memory/invmem_submission.py": "4a76099a4e679e80044e5e1467ad578282954d694958839a9720db0758943789",
     "src/agent_memory/lexical.py": "3695d4b8dffe451f75bf6fdaf8915fee0077b6997ef209d623cf94b340561a37",
     "src/agent_memory/memory.py": "c4407c07b302698b09580761e330217d7b4e1c14552753367dfdc7b58c569963",
+    "src/agent_memory/method_invmem.py": "fe71819e56ca0b7a12dfdf3a0aaf4602ebfb78dd1d14769105f39b8954f25bf8",
     "src/agent_memory/method_memmachine.py": "e2ec1e355819a161fbbb9f9ca972558a07058d36cb96155e75391c7ea214d207",
     "src/agent_memory/method_store.py": "42eb75d3610eaa65e76bca4e39420a6a5c45d986b8751e90a43763b5350d5ef5",
     "src/agent_memory/storage.py": "715c0ee49bbd097338672d4f89b892356e1395e1c28991c106f2bf3bceb83111",
@@ -45,7 +49,10 @@
     "tests/test_filter_concurrent_slot.py": "939f68f8ed59a567f83aa00064ee3db293e5ee112e9af2017482df494e0f6384",
     "tests/test_filter_paired_schema.py": "746b62d2a2374e46e4584a2918c520c4b6a51c2a7b4a899c47c15e556817a55b",
     "tests/test_final_filter.py": "e05f1076ed10feef6178442dbd57d1fb3baa01c874ee7a70c71e317b5b658655",
+    "tests/test_invmem_submission.py": "bde4c02007ed915c42ec77b39e1653d29e3b87cd46dd57f6dbde96a78323e371",
+    "tests/test_method_invmem.py": "40989e363f86c1532b6a5c954051368ac96b55a6261e477daae0a256b2789627",
     "tests/test_submission.py": "0a48694f8322cff36d20bcb9138f3bf2de9a24e73c7319c36a285d0964210384"
   },
-  "filter_output_contract": "required-per-short-id-paired-decisions-v5"
+  "filter_output_contract": "required-per-short-id-paired-decisions-v5",
+  "method": "invmem"
 }

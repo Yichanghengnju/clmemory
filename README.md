@@ -1,4 +1,15 @@
-# clmemory v1.0.5
+# clmemory method profiles
+
+This repository includes two independently frozen Textual profiles:
+
+- `clmemory` v1.0.5: attributed MemMachine event retrieval and a final evidence filter.
+- `invmem-v4-baseline8-v1.0`: independent InvMem algorithm adaptation, original
+  top8 recipe, text-embedding-v4 / 1024 dimensions, no generative LLM or final filter.
+  See [InvMem configuration, provenance and validation](docs/release-invmem-v4-v1.0.md).
+
+The InvMem profile is a separate evaluation version, database and embedding cache.
+The previously published v1.0.5 tag and its deployment sources remain frozen.
+The following sections document the clmemory profile.
 
 **A source-preserving, event-only MemMachine adaptation for the Agent Memory
 Leaderboard Textual and Coding tracks.** It directly uses MemMachine's native

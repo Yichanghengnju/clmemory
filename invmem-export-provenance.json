@@ -1,0 +1,14 @@
+{
+  "schema": "invmem-export-provenance-v1",
+  "project_committed_source": "bff53c69b414a2725992e28f64fd7e6b42b3be4d",
+  "uncommitted_research_changes_exported": false,
+  "files": {
+    "src/agent_memory/method_invmem.py": "18839997bbfd9fe70f3f9716ae77848788e0f93299c2d9db4df179a0538bfd3a",
+    "tests/test_method_invmem.py": "40989e363f86c1532b6a5c954051368ac96b55a6261e477daae0a256b2789627"
+  },
+  "upstream_algorithm_reference": "https://github.com/wenxiaof345-ctrl/vanilla-rag-memory/tree/31ab7bf9cfa3ee3c4f986e82f6e7a00b134ba8ca",
+  "upstream_code_copied": false,
+  "export_observation_changes": [
+    "Optional trace hook; records actual candidates and selected IDs; ranking and chunking statements unchanged"
+  ]
+}
