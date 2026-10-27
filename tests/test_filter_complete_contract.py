@@ -11,7 +11,7 @@ def build(tmp_path, transport, max_calls=1):
 
 def envelope(rows, refusal=False):
     return 200,json.dumps({'model':'gpt-4o-mini-2024-07-18','choices':[{'finish_reason':'stop',
-        'message':{'content':json.dumps({'query_decision':'allow','items':{row['id']:{k:v for k,v in row.items() if k!='id'} for row in rows}}),
+        'message':{'content':json.dumps({'result':{'query_decision':'allow','items':{row['id']:{k:v for k,v in row.items() if k!='id'} for row in rows}}}),
                    'refusal':'Synthetic refusal' if refusal else None}}],
         'usage':{'prompt_tokens':100,'completion_tokens':100,'total_tokens':200}}).encode()
 
@@ -25,7 +25,7 @@ def test_28_complete_decisions_keep_original_sources_and_reuse_result(tmp_path):
     calls=[]
     def send(payload):
         calls.append(payload)
-        schema=payload['response_format']['json_schema']['schema']['properties']['items']
+        schema=payload['response_format']['json_schema']['schema']['properties']['result']['anyOf'][0]['properties']['items']
         assert schema['type']=='object' and schema['additionalProperties'] is False
         assert schema['required']==[f'e{i:03d}' for i in range(len(HITS))]
         assert set(schema['properties'])=={f'e{i:03d}' for i in range(len(HITS))}

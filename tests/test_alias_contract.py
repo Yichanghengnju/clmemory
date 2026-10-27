@@ -14,8 +14,8 @@ def build(tmp_path, transport):
 
 def response(items, query_decision='allow'):
     return 200, json.dumps({'model':'gpt-4o-mini-2024-07-18',
-        'choices':[{'finish_reason':'stop','message':{'content':json.dumps({
-            'query_decision':query_decision,'items':items})}}],
+        'choices':[{'finish_reason':'stop','message':{'content':json.dumps({'result':{
+            'query_decision':query_decision,'items':items}})}}],
         'usage':{'prompt_tokens':200,'completion_tokens':100,'total_tokens':300}}).encode()
 
 
@@ -30,7 +30,7 @@ def test_top100_schema_uses_one_shared_enum_definition():
         if isinstance(value,list):return sum(enum_count(v) for v in value)
         return 0
     assert enum_count(schema)==13
-    assert schema['properties']['items']['properties']['e099']=={'$ref':'#/$defs/evidence_decision'}
+    assert schema['properties']['result']['anyOf'][0]['properties']['items']['properties']['e099']=={'$ref':'#/$defs/evidence_decision'}
 
 
 def hits(prefix='source', count=28):
@@ -44,7 +44,7 @@ def test_wire_aliases_restore_original_ids_content_order_and_cache_identity(tmp_
         rows=json.loads(payload['messages'][-1]['content'])['evidence']
         aliases=[r['id'] for r in rows]
         assert aliases == [f'e{i:03d}' for i in range(len(rows))]
-        assert payload['response_format']['json_schema']['schema']['properties']['items']['required']==aliases
+        assert payload['response_format']['json_schema']['schema']['properties']['result']['anyOf'][0]['properties']['items']['required']==aliases
         calls.append(payload)
         # JSON object key order must not affect original retrieval order.
         return response({r['id']:{'decision':'keep' if i%5==0 else 'drop',

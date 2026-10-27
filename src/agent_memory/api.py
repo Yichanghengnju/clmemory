@@ -3,6 +3,10 @@
 from contextlib import asynccontextmanager
 from pathlib import Path
 from secrets import compare_digest
+import hashlib
+import json
+import logging
+import traceback
 from typing import Annotated
 
 from fastapi import Depends, FastAPI, Request
@@ -20,6 +24,29 @@ from .domain import (
     SearchRequest,
     Text,
 )
+
+logger=logging.getLogger('clmemory.service')
+
+
+async def record_failure(request, exc, status):
+    """Log safe error provenance without headers, source text or exception arguments."""
+    record={'event':'memory_request_failed','http_status':status,'path':request.url.path,
+        'error_type':type(exc).__name__, 'frames':[
+            {'file':Path(f.filename).name,'function':f.name,'line':f.lineno}
+            for f in traceback.extract_tb(exc.__traceback__)[-6:]]}
+    diagnostic=getattr(exc,'diagnostic',None)
+    if isinstance(diagnostic,dict):
+        record['diagnostic']={k:v for k,v in diagnostic.items()
+            if k in {'category','payload_bytes','input_tokens','candidates','limit'}
+            and (v is None or type(v) in {str,int})}
+    try:
+        payload=await request.json()
+        for key in ['user_id','query','request_id']:
+            value=payload.get(key)
+            if isinstance(value,str):record[key+'_sha256']=hashlib.sha256(value.encode()).hexdigest()
+    except Exception:
+        pass
+    logger.error(json.dumps(record,sort_keys=True))
 
 
 class _SearchHit(ContractModel):
@@ -110,14 +137,17 @@ def create_app(
 
     @app.exception_handler(TimeoutError)
     async def timeout_handler(request: Request, exc: TimeoutError) -> JSONResponse:
+        await record_failure(request,exc,504)
         return JSONResponse(status_code=504, content={"detail": "Memory service timed out"})
 
     @app.exception_handler(ConnectionError)
     async def unavailable_handler(request: Request, exc: ConnectionError) -> JSONResponse:
+        await record_failure(request,exc,503)
         return JSONResponse(status_code=503, content={"detail": "Memory service unavailable"})
 
     @app.exception_handler(Exception)
     async def error_handler(request: Request, exc: Exception) -> JSONResponse:
+        await record_failure(request,exc,500)
         response = JSONResponse(status_code=500, content={"detail": "Memory service failed"})
         if trace_recorder is not None and trace_recorder.enabled:
             finish_http_error(request, 500)

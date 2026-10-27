@@ -31,7 +31,7 @@ def build_app(*, db_path, api_key, embedder, track, manifest_dir=None, final_fil
         finally:
             memory.close()
     app.router.lifespan_context = lifespan
-    manifest = {"system": "clmemory", "version": "v1.0.4-" + track, "track": track,
+    manifest = {"system": "clmemory", "version": "v1.0.5-" + track, "track": track,
                 "source_files_sha256": code_manifest(), "method": memory.identity,
                 "llm_calls_in_add": 0,
                 "llm_calls_in_search": "one cached final-filter batch if nonempty" if final_filter else 0,

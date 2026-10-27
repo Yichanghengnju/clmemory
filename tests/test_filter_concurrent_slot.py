@@ -11,7 +11,7 @@ def test_concurrent_same_request_waits_then_reuses_one_physical_result(tmp_path)
     def send(payload):
         calls.append(1);time.sleep(0.04)
         return 200,json.dumps({'model':'gpt-4o-mini','choices':[{'finish_reason':'stop','message':{
-            'content':json.dumps({'query_decision':'allow','items':{'e000':{'decision':'keep','reason':'relevant'}}})}}],
+            'content':json.dumps({'result':{'query_decision':'allow','items':{'e000':{'decision':'keep','reason':'relevant'}}}})}}],
             'usage':{'prompt_tokens':1,'completion_tokens':1,'total_tokens':2}}).encode()
     f=FinalEvidenceFilter({'model':'gpt-4o-mini','endpoint':'https://example.com/v1/chat/completions',
         'api_key_file':str(key),'cache_dir':str(tmp_path/'cache'),'shared_lock':str(tmp_path/'slot'),
@@ -34,7 +34,7 @@ def test_distinct_requests_share_one_model_slot_and_keep_the_cumulative_cap(tmp_
         time.sleep(0.03)
         with guard:active-=1
         return 200,json.dumps({'model':'gpt-4o-mini','choices':[{'finish_reason':'stop','message':{
-            'content':json.dumps({'query_decision':'allow','items':{'e000':{'decision':'keep','reason':'relevant'}}})}}],
+            'content':json.dumps({'result':{'query_decision':'allow','items':{'e000':{'decision':'keep','reason':'relevant'}}}})}}],
             'usage':{'prompt_tokens':1,'completion_tokens':1,'total_tokens':2}}).encode()
     f=FinalEvidenceFilter({'model':'gpt-4o-mini','endpoint':'https://example.com/v1/chat/completions',
         'api_key_file':str(key),'cache_dir':str(tmp_path/'cache'),'shared_lock':str(tmp_path/'slot'),
