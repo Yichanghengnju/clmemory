@@ -120,3 +120,7 @@ The platform controls source chunking, answering and scoring. There are no
 benchmark data, labels, judge prompts, research runners, or private logs here.
 
 Contact: Chang-Heng Yi, Nanjing University / Cllab. Apache-2.0; see LICENSE and NOTICE.
+
+## Native MemMachine baseline
+
+The separate `memmachine-event-v4-v1.0` profile uses native EventMemory with a 100-result cap and no clmemory append/filter. See [configuration and limitations](docs/release-memmachine-event-v4-v1.0.md).
