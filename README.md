@@ -1,3 +1,28 @@
+# clmemory E*: frozen native harness + source retrieval
+
+This is the user-selected Textual Smoke candidate `textual-Estar-S14-v1.0`. It keeps the existing R+H+F composition with the unchanged S14 retrieval rule library. It has not been shown to be a universal winner; the local paired confirmation has gains, regressions, missingness and source/score limitations.
+
+- Add: attributed MemMachine native EventMemory, whole-text/passthrough; no generative model.
+- R: dense/BM25/RRF16, at most8 same-session neighbors and8 anchors, unchanged16000-o200k whole-source packing.
+- H: unmodified official DeepSeek dsh0.2.0-rc.1 and SDK client0.2.0-rc.1 own the model/tool loop. Persistent workers use a fresh source capability/session per query; six workers, at most16 sessions per healthy worker.
+- Search model: GPT-4o-mini, at most6 responses,1536 output tokens/request,12 primitive calls,150 seconds/query. Tools: hybrid_search, grep, read_source, finish_evidence. There are no shell/filesystem/subprocess capabilities exposed to the retrieval model.
+- F: the unchanged source RRF fusion, source visibility/retraction checks and60000-character whole-source delivery budget. Original failure/fallback behavior is retained and reported separately from H success.
+- S14: `skills/S14.txt`, exact SHA256 `cb745515471e0a5828e99c390ffb3c9fb5f22b66809a0f67044b1e45af764f10`. No post-confirmation rule editing, KD, AgentDistill or deep-tail expansion.
+- Embedding: text-embedding-v4 /1024 /L2. Official Answer/Eval are run by AML, not by this service.
+- HTTP128 admission, one process; identical requests wait for their existing task rather than colliding on its lock. This adapter changes admission only, with no query/prompt/evidence changes.
+
+Install the Python and pinned native MemMachine dependencies as described in the retained base documentation. Install the pinned dsh packages in a separate runtime with `npm ci --prefix tools/deepseek_harness`, or use an independently verified runtime containing both exact pinned packages. Node22 is the tested host runtime.
+
+Run `python -m agent_memory.estar_submission --db PRIVATE_DB --api-key-file PRIVATE_MEMORY_TOKEN --embedding-profile PRIVATE_V4_PROFILE --mini-key-file PRIVATE_MINI_KEY --runtime-dir SDK_RUNTIME --run-dir PRIVATE_RUN --port 18119`.
+
+Credentials and run databases are external to this source checkout. Model/embedding sends are single-attempt transports; saved exact success is reused, failed/unknown stays held. The independent Smoke has an operational ceiling of384 native model sends including preflight, not a newly claimed upstream hard limit. Source/model receipts are private evaluation-only operational data, kept for at most30 days and never used for training, tuning or public case analysis.
+
+This tag is an independent Smoke release. Main and the previous Textual/Coding backends remain unchanged. Run at most one Smoke and no automatic resume or Full. The public Textual root is temporarily routed here only for the authorized test and restored afterward.
+
+Original upstream and base release attribution are retained below.
+
+---
+
 # clmemory method profiles
 
 This repository includes two independently frozen Textual profiles:

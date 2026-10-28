@@ -18,6 +18,7 @@ clmemory = "agent_memory.submission:main"
 clmemory-invmem = "agent_memory.invmem_submission:main"
 clmemory-nofilter = "agent_memory.nofilter_submission:main"
 clmemory-memmachine = "agent_memory.memmachine_submission:main"
+clmemory-estar = "agent_memory.estar_submission:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

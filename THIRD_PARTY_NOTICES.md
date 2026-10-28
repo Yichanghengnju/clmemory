@@ -31,3 +31,6 @@ The service also imports FastAPI (MIT), Pydantic (MIT) and Uvicorn (BSD-3-Clause
 and the transitive dependencies installed by the pinned MemMachine packages.
 Their original distributions and license notices remain authoritative. This
 repository's license does not relicense upstream dependencies or data.
+
+
+DeepSeek dsh and the official SDK client are used unmodified via npm, pinned at0.2.0-rc.1. Python serves source-scoped capabilities and a single-send model gateway; the official SDK owns the agent loop. The npm packages retain their own license and upstream attribution.

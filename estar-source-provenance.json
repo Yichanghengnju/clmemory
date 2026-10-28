@@ -1,0 +1,28 @@
+{
+  "track": "textual",
+  "method": "E*=R+nativeH+F+unchangedS14",
+  "skill_sha256": "cb745515471e0a5828e99c390ffb3c9fb5f22b66809a0f67044b1e45af764f10",
+  "KD": false,
+  "AgentDistill": false,
+  "new_learning_or_rule_tuning": false,
+  "base_public_tag": "memmachine-event-v4-v1.0",
+  "base_public_commit": "aa617984115051e2591e265c2c14596f407b9c73",
+  "unchanged_frozen_module_sha256": {
+    "method_memmachine.py": "a3b316ad5e199272861c3726eef53661aa70db9b1b0997ecc0bb9c1e030525c5",
+    "method_store.py": "aa28d8f41b0e0b92361e5f868580265ab51102036610390390199f8a8e5ac344",
+    "deepseek_memory.py": "64ed238192201b9608225182fa72f690bf23139dc3a8e958a270860d28b490a5",
+    "evidence_safety.py": "0f480623e5abb6ebf9f2c65c098f75d3d31743dd0a1247ca61cb150d872821d8",
+    "native_chat.py": "765fa925f95527cfa2c3d6a9247a25276f05a76a1339e6e3f33da4f95497d0ea",
+    "mini_proxy_provider.py": "682edebee8312e8443357557e78387b800b58d6ddcdf960f9bc73dbf63a68822",
+    "persistent_native_harness.py": "a342f0158106ca565ce15ef2257be3c570e5501e8dd99b4189cdb76ca01475ae",
+    "providers.py": "31df0e0ca000bd05426a7c70166486fab8ea5085a2b7e835fb3e2c1b1cd03b64"
+  },
+  "R_helper_extraction": "render_source/pack/neighbors AST-identical; only import location changed",
+  "API_wrapper": "existing published safe error metadata; method inputs/outputs unchanged",
+  "harness": "@deepseek-ai/dsh@0.2.0-rc.1",
+  "native_transport": "official-sdk-persistent-fresh-session-v1",
+  "upstream_MemMachine_commit": "d5a39a8e774e977fb1e6c22efb03555c4e51e05e",
+  "learning_distinct_inputs": 4106,
+  "actual_5000_learning_target_met": false,
+  "method_superiority_claim": null
+}
