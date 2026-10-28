@@ -14,12 +14,12 @@ from .method_memmachine import MemMachineMemory, _index_lock
 from .native_chat import NativeChatProvider
 from .persistent_native_harness import NativeHarnessPool, PersistentNativeHarness
 
-VERSION = 'textual-Estar-S14-v1.0'
+VERSION = 'textual-Estar-S14-v1.1'
 SKILL_SHA256 = 'cb745515471e0a5828e99c390ffb3c9fb5f22b66809a0f67044b1e45af764f10'
 CONFIG = {'embedding_dimensions':1024, 'deriver':'whole_text', 'segmenter':'passthrough',
           'rrf_k':60, 'bm25_tokenizer':'simple', 'dedup_overfetch':4,
           'expand_context':0, 'max_results':16}
-NATIVE_CALL_CEILING = 384  # Finite operational bound for this one Smoke, including preflight.
+NATIVE_CALL_CEILING = None  # No cumulative stop; per-query method and failure controls remain.
 
 
 class ExactQuerySingleFlight:
@@ -53,8 +53,8 @@ def build_app(*, db_path, api_key, embedder, run_dir, runtime_dir=None, mini_key
     provider = pool = None
     if harness is None:
         provider = NativeChatProvider(run/'native-calls.sqlite3', key_file=mini_key_file,
-            max_calls=NATIVE_CALL_CEILING, max_output_tokens=NATIVE_CALL_CEILING*1536,
-            max_input_estimate=NATIVE_CALL_CEILING*180000, allow_dated_snapshot=True)
+            max_calls=None, max_output_tokens=None,
+            max_input_estimate=None, allow_dated_snapshot=True)
         pool = NativeHarnessPool(max_workers=6, max_sessions=16)
         harness = PersistentNativeHarness(provider=provider, pool=pool, runtime_dir=runtime_dir,
             artifact_dir=run/'native', skill=skill, max_steps=6, timeout_s=150,
@@ -85,7 +85,7 @@ def build_app(*, db_path, api_key, embedder, run_dir, runtime_dir=None, mini_key
         'native_transport':'official-sdk-persistent-fresh-session-v1', 'max_steps':6,
         'max_tool_calls':12, 'timeout_s':150, 'output_tokens_per_request':1536,
         'new_native_call_ceiling':NATIVE_CALL_CEILING,
-        'call_ceiling_authority':'assistant operational guard for one user-authorized Smoke, not a user quoted number',
+        'call_ceiling_authority':'direct user requested no cumulative Full request/token stop; durable accounting retained',
         'llm_calls_in_add':0, 'llm_calls_in_search':'0..6 native model requests; compatible successful requests cached',
         'H_failure_behavior':'preserve original H failure and use original R/F fallback when available',
         'http_admission_limit':128, 'native_workers':6, 'embedding_concurrency':1,

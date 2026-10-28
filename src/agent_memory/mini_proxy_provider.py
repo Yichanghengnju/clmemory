@@ -48,11 +48,11 @@ def _send(payload: bytes, key: str, timeout: float):
 
 class MiniProxyProvider:
     def __init__(self, ledger_path: str | Path, *, key_file: str | Path,
-                 max_calls: int, max_output_tokens: int,
+                 max_calls: int | None, max_output_tokens: int | None,
                  max_input_estimate: int | None = None,
                  allow_dated_snapshot: bool = False, transport=None):
         for name, value in (("max_calls", max_calls), ("max_output_tokens", max_output_tokens)):
-            if type(value) is not int or value < 0:
+            if value is not None and (type(value) is not int or value < 0):
                 raise ValueError(name + " must be a nonnegative integer")
         if max_input_estimate is not None and (type(max_input_estimate) is not int or max_input_estimate < 0):
             raise ValueError("max_input_estimate must be a nonnegative integer")
@@ -111,8 +111,8 @@ class MiniProxyProvider:
                 raise MiniProxyError("request is held; inspect its existing attempt, do not resend", reason="held")
             reserved = [t for t in self.store.list_tasks(stage=STAGE)
                         if self.store.list_attempts(t["id"])]
-            if (len(reserved) >= self.max_calls or
-                    sum(t["payload"]["output_reservation"] for t in reserved) + config.max_tokens > self.max_output_tokens or
+            if ((self.max_calls is not None and len(reserved) >= self.max_calls) or
+                    (self.max_output_tokens is not None and sum(t["payload"]["output_reservation"] for t in reserved) + config.max_tokens > self.max_output_tokens) or
                     (self.max_input_estimate is not None and
                      sum(t["payload"]["input_estimate"] for t in reserved) + len(encoded) > self.max_input_estimate)):
                 raise MiniProxyError("run request/token reservation budget exhausted", reason="budget")

@@ -1,9 +1,9 @@
 """Source visibility for the new ensemble recipe; no answer or refusal generation.
 
-Only explicit, standalone user instructions have delivery semantics. Corrections,
-historical facts, assistant prose, quoted instructions, and sensitive vocabulary
-alone do not revoke anything. Raw storage is immutable. This deliberately narrow
-parser exposes unsupported language as unknown, not as proven unsupported facts.
+Only explicit, standalone user controls or preference updates have delivery
+semantics. Historical facts, assistant prose, quoted instructions, and sensitive
+vocabulary alone do not revoke anything. Raw storage is immutable; unsupported
+referents stay unknown. Exact user update sources retain their own provenance.
 """
 from __future__ import annotations
 
@@ -15,7 +15,9 @@ import re
 from .domain import Evidence
 from .anchor_channel import _render_source
 
-SAFETY_VERSION = "textual-source-visibility-v1"
+from .attribute_state import preference_events, relevant_events
+
+SAFETY_VERSION = "textual-source-visibility-attribute-v2"
 _DIRECTIVE = re.compile(
     r'^(?:please\s+)?(?:forget|never disclose|do not (?:disclose|reveal|share)|'
     r"don['’]t (?:disclose|reveal|share))\s+(.+?)[.!。]?$", re.I)
@@ -35,18 +37,21 @@ class GateDecision:
 class Visibility:
     """A server-bound complete user scope, preserving legal cross-session reads."""
 
-    def __init__(self, user_id: str, sources: list[dict]):
+    def __init__(self, user_id: str, sources: list[dict], *, query: str = ''):
         self.user_id = user_id
         if any(s.get("user_id") != user_id for s in sources):
             raise ValueError("source scope violation")
         self.sources = {s["id"]: dict(s) for s in sources}
+        self.query = query
         self.blocked: dict[str, str] = {}
         self.literals: list[str] = []
+        self.state_events, attribute_blocked = preference_events(user_id, sources)
+        state_controls = {e["source_id"] for e in self.state_events}
         prior = []
         for source in sources:
             text = source["content"].strip()
             match = (_DIRECTIVE.fullmatch(text) or _CN_DIRECTIVE.fullmatch(text)) if source["role"] == "user" else None
-            if not match:
+            if not match or source["id"] in state_controls:
                 prior.append(source)
                 continue
             target = match.group(1).strip()
@@ -83,6 +88,22 @@ class Visibility:
         for sid, source in self.sources.items():
             if any(value in source["content"].casefold() for value in self.literals):
                 self.blocked.setdefault(sid, "withdrawn_literal_copy")
+
+        if re.search(r'\b(?:previously|used to|before.{0,40}(?:change|update)|original(?:ly)?|in 20\d\d)\b|以前|过去|更正前',query,re.I):
+            # Corrections supersede the current value, but do not erase history.
+            # Explicit withdrawal remains unavailable even to historical queries.
+            historical={e['source_id'] for e in self.state_events if e['kind']=='corrected'}
+            attribute_blocked={sid:reason for sid,reason in attribute_blocked.items()
+                               if reason.split(':',1)[-1] not in historical}
+        self.blocked.update(attribute_blocked)
+
+    def state_evidence(self, query, hits):
+        ids = [s for h in hits for s in h.source_ids]
+        events = relevant_events(self.state_events, query, ids)
+        states = [Evidence(id=e["source_id"], source_ids=(e["source_id"],), score=1.,
+                    content=_render_source(self.read(e["source_id"])), kind="attribute_state_source")
+                  for e in events if self.visible(e["source_id"])]
+        return self.filter(states + hits)[0]
 
     @property
     def snapshot(self):

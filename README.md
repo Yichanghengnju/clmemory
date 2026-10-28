@@ -1,25 +1,61 @@
-# clmemory E*: frozen native harness + source retrieval
+# clmemory E* v1.1: native finish, attribute state, R observations
 
-This is the user-selected Textual Smoke candidate `textual-Estar-S14-v1.0`. It keeps the existing R+H+F composition with the unchanged S14 retrieval rule library. It has not been shown to be a universal winner; the local paired confirmation has gains, regressions, missingness and source/score limitations.
+This is the independent `textual-estar-s14-v1.1.0` Smoke release, based on the
+immutable v1.0.1 Smoke release. H, F and the exact S14 library remain enabled; KD and AgentDistill
+remain disabled. The old published version and all its results are unchanged.
 
-- Add: attributed MemMachine native EventMemory, whole-text/passthrough; no generative model.
-- R: dense/BM25/RRF16, at most8 same-session neighbors and8 anchors, unchanged16000-o200k whole-source packing.
-- H: unmodified official DeepSeek dsh0.2.0-rc.1 and SDK client0.2.0-rc.1 own the model/tool loop. Persistent workers use a fresh source capability/session per query; six workers, at most16 sessions per healthy worker.
-- Search model: GPT-4o-mini, at most6 responses,1536 output tokens/request,12 primitive calls,150 seconds/query. Tools: hybrid_search, grep, read_source, finish_evidence. There are no shell/filesystem/subprocess capabilities exposed to the retrieval model.
-- F: the unchanged source RRF fusion, source visibility/retraction checks and60000-character whole-source delivery budget. Original failure/fallback behavior is retained and reported separately from H success.
-- S14: `skills/S14.txt`, exact SHA256 `cb745515471e0a5828e99c390ffb3c9fb5f22b66809a0f67044b1e45af764f10`. No post-confirmation rule editing, KD, AgentDistill or deep-tail expansion.
-- Embedding: text-embedding-v4 /1024 /L2. Official Answer/Eval are run by AML, not by this service.
-- HTTP128 admission, one process; identical requests wait for their existing task rather than colliding on its lock. This adapter changes admission only, with no query/prompt/evidence changes.
+- The pinned official dsh SDK 0.2.0-rc.1 owns the model/tool loop. A successful
+  finish_evidence calls the public concludeTurn API. One native steering reminder
+  is allowed for a premature stop; the sixth model request is reserved for final
+  selection. Same-batch calls after a valid finish are recorded as skipped and
+  perform no source access. Invalid or foreign sources still fail.
+- At most six model responses, twelve actual primitive tool calls, 150 seconds
+  and 1536 requested output tokens per response remain the per-query method.
+- F links explicit standalone user preference withdrawals and corrections to
+  subject, attribute/value, chronological sequence, timestamp and raw source ID.
+  Prior affected source messages are withheld for current-state retrieval;
+  corrections remain available with their update context for explicit historical
+  questions. Withdrawal is not negative preference. No synthetic user fact is
+  generated, raw messages are not rewritten, and unknown referents stay unknown.
+  This conservative parser is not a general natural-language state resolver.
+- H initially observes up to three complete, visible R sources, at most 9000
+  characters combined. They count toward the original observation allowance and
+  require no extra tool dispatch. R completes before H begins; this trades some
+  first-request context and sequential R latency for fewer repeated searches.
+- Add, native MemMachine event retrieval, v4/1024 embeddings, original R16 plus
+  eight neighbors/eight anchors, source RRF and whole-source delivery remain.
+- S14 is unchanged: cb745515471e0a5828e99c390ffb3c9fb5f22b66809a0f67044b1e45af764f10.
 
-Install the Python and pinned native MemMachine dependencies as described in the retained base documentation. Install the pinned dsh packages in a separate runtime with `npm ci --prefix tools/deepseek_harness`, or use an independently verified runtime containing both exact pinned packages. Node22 is the tested host runtime.
+There is **no cumulative native request/token/input stop** in this candidate's
+service profile, as directly requested by the user for Full. Durable accounting,
+exact-success reuse, failure/unknown holds and manual STOP/PAUSE remain. None
+means no cumulative cap; a numeric zero still means no calls. This does not remove
+upstream quota, rate limits or network errors, and does not change historical
+teacher/learning ledgers or their finite contracts.
 
-Run `python -m agent_memory.estar_submission --db PRIVATE_DB --api-key-file PRIVATE_MEMORY_TOKEN --embedding-profile PRIVATE_V4_PROFILE --mini-key-file PRIVATE_MINI_KEY --runtime-dir SDK_RUNTIME --run-dir PRIVATE_RUN --port 18119`.
+Validation uses independent synthetic development cases and preserved operational
+metadata, never official benchmark questions as training/tuning cases. See
+docs/release-estar-v1.1-candidate.md. At publication, this version has not yet passed its new official Smoke.
+The user authorized one Smoke and explicitly prohibited Full submission. No production route is changed
+by starting the local validation helpers.
 
-Credentials and run databases are external to this source checkout. Model/embedding sends are single-attempt transports; saved exact success is reused, failed/unknown stays held. The independent Smoke has an operational ceiling of384 native model sends including preflight, not a newly claimed upstream hard limit. Source/model receipts are private evaluation-only operational data, kept for at most30 days and never used for training, tuning or public case analysis.
+Install the pinned Python and SDK dependencies as in the inherited documentation.
+Run the candidate from this checkout using:
 
-This tag is an independent Smoke release. Main and the previous Textual/Coding backends remain unchanged. Run at most one Smoke and no automatic resume or Full. The public Textual root is temporarily routed here only for the authorized test and restored afterward.
+```sh
+python -m agent_memory.estar_submission --db PRIVATE_DB --api-key-file PRIVATE_TOKEN \
+  --embedding-profile PRIVATE_V4_PROFILE --mini-key-file PRIVATE_MINI_KEY \
+  --runtime-dir PINNED_SDK_RUNTIME --run-dir PRIVATE_RUN --port 18122
+```
+
+Credentials, private receipts and databases must remain outside the published
+source. Official evaluation receipts are evaluation-only, at most30 days, not
+training data. The user authorized this independent tag, version, backend and one temporary
+Textual-root Smoke. Restore the previous root on termination. Full remains
+unsubmitted. The previous version's Smoke identity cannot be borrowed.
 
 Original upstream and base release attribution are retained below.
+
 
 ---
 

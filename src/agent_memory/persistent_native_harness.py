@@ -65,7 +65,12 @@ class _Worker:
                     size = int(self.headers.get('Content-Length', '0'))
                     if not 0 < size < 600000: raise ValueError('request body budget')
                     value = json.loads(self.rfile.read(size))
-                    if self.path == '/tools':
+                    if self.path == '/control':
+                        data = _json({'selected':binding.tools.selected,
+                            'remaining_models':binding.harness.max_steps-len(binding.calls),
+                            'remaining_tools':binding.tools.max_tools-len(binding.tools.actions)}).encode()
+                        kind = 'application/json'
+                    elif self.path == '/tools':
                         started = time.monotonic()
                         try: data = _json(binding.tools.execute(value['name'], value['args'])).encode()
                         finally: binding.tool_seconds += time.monotonic()-started
@@ -76,6 +81,8 @@ class _Worker:
                         if len(binding.calls) >= binding.harness.max_steps:
                             raise RuntimeError('query model step budget exhausted')
                         if len(_json(value).encode()) > 180000: raise ValueError('query context budget exhausted')
+                        if len(binding.calls)==binding.harness.max_steps-1 or len(binding.tools.actions)>=binding.tools.max_tools-1:
+                            value['tool_choice']={'type':'function','function':{'name':'finish_evidence'}}
                         call = {'request': value}; binding.calls.append(call)
                         with native_request_window(binding.deadline, call.setdefault('timing', {})):
                             body = binding.harness.provider.chat(value, scope=binding.scope,
@@ -225,7 +232,7 @@ class PersistentNativeHarness(NativeHarness):
             with worker.lock:
                 if worker.active is not None:raise RuntimeError('native worker already has an active capability')
                 worker.active=binding
-            worker.send({'command':'run','prompt':_json({'query':tools.request.query,'options':tools.request.options,'top_k':tools.request.top_k}),
+            worker.send({'command':'run','prompt':_json(tools.prompt()),
                 'session_id':session,'result':str(root/'result.json'),'timeout_ms':max(1,int((deadline-time.monotonic())*1000))})
             result=worker.receive(deadline+1)
             if result.get('session_id')!=session or not result.get('complete'):
@@ -240,6 +247,7 @@ class PersistentNativeHarness(NativeHarness):
                 with worker.lock:worker.active=None
                 self.pool.release(worker,healthy)
             (root/'receipt.json').write_text(_json({'scope':scope,'calls':binding.calls,'tools':tools.actions,
-                'errors':binding.errors,'selected':tools.selected,'latency_s':time.monotonic()-started,
+                'errors':binding.errors,'selected':tools.selected,
+                'prefill':tools.prefilled,'control_events':tools.control_events,'latency_s':time.monotonic()-started,
                 'transport':'official-sdk-persistent-fresh-session-v1','execution':execution,
                 'tool_execute_s':binding.tool_seconds}), 'utf-8')

@@ -129,8 +129,8 @@ class NativeChatProvider(MiniProxyProvider):
                         return body
                 raise MiniProxyError("native request held; no automatic resend", reason="held")
             reserved = self.admission_totals()
-            if (reserved['calls'] >= self.max_calls
-                or reserved['output_reservation'] + cap > self.max_output_tokens
+            if (self.max_calls is not None and reserved['calls'] >= self.max_calls
+                or self.max_output_tokens is not None and reserved['output_reservation'] + cap > self.max_output_tokens
                 or self.max_input_estimate is not None and reserved['input_estimate'] + len(encoded) > self.max_input_estimate):
                 raise MiniProxyError("native run budget exhausted", reason="budget")
             task = self.store.enqueue(task_key, STAGE, digest, safe)

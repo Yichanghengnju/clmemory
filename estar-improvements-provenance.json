@@ -1,0 +1,26 @@
+{
+  "state": "independent_smoke_release",
+  "base_commit": "8b4b26b1a6850b12acce1dfb0554d4d7ff3890dc",
+  "S14_sha256": "cb745515471e0a5828e99c390ffb3c9fb5f22b66809a0f67044b1e45af764f10",
+  "version_name": "textual-Estar-S14-v1.1",
+  "old_tag_unchanged": true,
+  "direct_user_changes": [
+    "native terminal protocol",
+    "attribute withdrawal/correction links",
+    "whole-source R prefill"
+  ],
+  "Full_cumulative_caps": {
+    "calls": null,
+    "output_tokens": null,
+    "input_estimate": null
+  },
+  "no_new_learning_teacher_KD_or_AD": true,
+  "official_inputs_used_for_tuning": false,
+  "prior_Full_hold": "direct user reaffirmed Smoke only; Full not submitted",
+  "tag": "textual-estar-s14-v1.1.0",
+  "publication_only_changes_since_local_validation": [
+    "version metadata",
+    "release documentation",
+    "Git-byte manifest"
+  ]
+}

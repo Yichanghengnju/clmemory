@@ -3,11 +3,26 @@ import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
 import path from 'node:path';
 import {AsyncLocalStorage} from 'node:async_hooks';
+import {randomUUID} from 'node:crypto';
 const require = createRequire(path.join(process.env.AM_DSH_RUNTIME, 'package.json'));
 const { defineTool } = await import(pathToFileURL(require.resolve('@deepseek-ai/dsh-tools')));
 export const name = 'agentmemory-source-tools';
 export const inject = ['tools','llm'];
 export function apply(ctx) {
+  const reminded=new Set();
+  if(process.env.AM_POOLED==='1')ctx.on('agent/turn-stopping',async ({agent,signal})=>{
+    const session=String(agent.session.id);
+    if(reminded.has(session))return;
+    const response=await fetch(process.env.AM_GATEWAY_PREFIX+'/control',{method:'POST',
+      headers:{'Content-Type':'application/json',Authorization:'Bearer '+process.env.AM_CAPABILITY,
+               'X-AM-Session':session},body:'{}',signal});
+    if(!response.ok)throw new Error('Finish state unavailable: '+response.status);
+    const state=await response.json();
+    if(state.selected!==null || state.remaining_models<=0 || state.remaining_tools<=0)return;
+    reminded.add(session);
+    agent.steer({role:'user',id:randomUUID(),source:{kind:'agentmemory-protocol',form:'instructions'},
+      content:[{type:'text',text:'The evidence protocol is incomplete. Call finish_evidence now with only observed, visible source IDs (or [] if none is relevant). Do not answer the question. This is the one finish reminder within the original six model requests.'}]});
+  });
   if(process.env.AM_POOLED==='1'){
     // Out-of-band session capability. Keep frozen agent-loop messages unchanged.
     const sessions=new AsyncLocalStorage();
@@ -53,7 +68,9 @@ export function apply(ctx) {
             ...(process.env.AM_POOLED==='1'?{'X-AM-Session':String(exec.agent?.session?.id ?? '')}:{})},
           body:JSON.stringify({name,args}),signal:exec.signal});
         if (!r.ok) throw new Error('Source tool rejected: HTTP '+r.status);
-        return await r.text();
+        const value=await r.text();
+        if(name==='finish_evidence' || JSON.parse(value).status==='skipped_after_finish')exec.concludeTurn();
+        return value;
       },
     }));
   }
