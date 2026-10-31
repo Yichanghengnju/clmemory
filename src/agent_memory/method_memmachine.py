@@ -380,3 +380,20 @@ class MemMachineMemory:
         if not self._closed:
             self._store.close()
             self._closed = True
+
+    def search_visible(self, request: SearchRequest, source_ids: set[str]) -> list[Evidence]:
+        """New recipe seam: restrict source hydration/ranking before retrieval.
+
+        The original search and storage identity stay unchanged. Callers supply
+        a server-computed subset, never model-specified scope or user IDs.
+        """
+        self._check_identity()
+        request = SearchRequest.model_validate(request.model_dump())
+        with _index_lock(self._user_path(request.user_id) / "index.lock"):
+            sources = {s["id"]: s for s in self._store.all_sources(request.user_id)
+                       if s["id"] in source_ids}
+            if not sources:
+                return []
+            result = asyncio.run(self._query(request, sources))
+            self._check_identity()
+            return result

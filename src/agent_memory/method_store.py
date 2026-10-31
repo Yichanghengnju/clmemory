@@ -358,6 +358,23 @@ class MethodStore:
                 sql + " ORDER BY rowid", params
             )]
 
+    def source_snapshot(self, user: str, previous_revision=None):
+        """Read a user view only after this connection's source state changes.
+
+        data_version detects commits from other connections; total_changes also
+        detects our own writes. Tokens are connection- and user-bound, never
+        persisted or used as model/cache identities. Any write invalidates this
+        conservative cache, including out-of-process withdrawal/Add commits.
+        """
+        with self._transaction() as connection:
+            revision = (id(self), user, connection.execute('PRAGMA data_version').fetchone()[0],
+                        connection.total_changes)
+            if revision == previous_revision:
+                return revision, None
+            rows = [dict(row) for row in connection.execute(
+                'SELECT rowid AS seq, * FROM source_messages WHERE user_id = ? ORDER BY rowid', (user,))]
+            return revision, rows
+
     allsources = all_sources
 
     def source_lookup(self, user: str, ids: list[str] | tuple[str, ...]) -> list[dict]:

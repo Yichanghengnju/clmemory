@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "clmemory"
-version = "1.2.0"
+version = "1.3.0"
 description = "Attributed MemMachine event-memory adaptation for AML Textual and Coding"
 requires-python = ">=3.12"
 license = {text = "Apache-2.0"}
@@ -17,6 +17,8 @@ test = ["pytest>=8,<10", "httpx>=0.27,<1", "jsonschema>=4.23,<5"]
 clmemory = "agent_memory.submission:main"
 clmemory-invmem = "agent_memory.invmem_submission:main"
 clmemory-nofilter = "agent_memory.nofilter_submission:main"
+clmemory-memmachine = "agent_memory.memmachine_submission:main"
+clmemory-estar = "agent_memory.estar_submission:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

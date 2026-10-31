@@ -1,0 +1,11 @@
+{
+  "base_commit": "6b4e2430f9f8e45e8228bc0fb3ae9832f2f2d609",
+  "unchanged_core_sha256": {
+    "src/agent_memory/method_memmachine.py": "e2ec1e355819a161fbbb9f9ca972558a07058d36cb96155e75391c7ea214d207",
+    "src/agent_memory/method_store.py": "42eb75d3610eaa65e76bca4e39420a6a5c45d986b8751e90a43763b5350d5ef5",
+    "src/agent_memory/bailian_embeddings.py": "4aee9b102fa8b423dfc59e1b59363dcf2f753034c1243124654a33d096dcae34",
+    "src/agent_memory/api.py": "fd7cf9c48c3d0024ee8349bdf0eccaf5df976531ab8fc6d4e8cb33d84a4e0851",
+    "src/agent_memory/domain.py": "2c53c679f99da86e89158add1e9ee6dc2c66bab3683d1935e12c9ab239d749b4",
+    "src/agent_memory/tasks.py": "530210e41e701faa51fef51b4973873dc5e4db190ecbd8fc07321a9eafd822da"
+  }
+}
